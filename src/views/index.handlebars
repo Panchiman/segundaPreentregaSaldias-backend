@@ -1,0 +1,31 @@
+{{#if isValid}}
+<div>
+    <h1>Productos:</h1>
+    {{#each docs}}
+    <div>
+        <h4>{{this.title}} &nbsp; </h4>
+        <p>Descripcion: {{this.description}} &nbsp; </p>
+        <p>Precio: ${{this.price}} &nbsp; </p>
+        <p>Categoria: {{this.category}} &nbsp; </p>
+        <img src="{{this.thumbnail}}" alt="{{this.description}}">
+        <p>Stock: {{this.stock}} &nbsp; </p>
+        <hr>
+    </div>
+    <br/>
+    {{/each}}
+</div>
+<br/>
+<div>
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}}><< Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{this.page}}
+    &nbsp;
+     {{#if hasNextPage}}
+        <a href={{this.nextLink}}>Siguiente >></a>
+    {{/if}} 
+</div>
+{{else}}
+<h1>No hay productos</h1>
+{{/if}}

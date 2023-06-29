@@ -1,0 +1,29 @@
+{{#if isValid}}
+<div>
+    {{#each docs}}
+    <div>
+        <p>{{this.title}} &nbsp; </p>
+        <p>Descripcion: {{this.description}} &nbsp; </p>
+        <p>Precio: ${{this.price}} &nbsp; </p>
+        <p>Categoria: {{this.category}} &nbsp; </p>
+        <img src="{{this.thumbnail}}" alt="{{this.description}}">
+        <p>Stock: {{this.stock}} &nbsp; </p>
+    </div>
+    <br/>
+    {{/each}}
+</div>
+<br/>
+<div>
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}}><< Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{this.page}}
+    &nbsp;
+     {{#if hasNextPage}}
+        <a href={{this.nextLink}}>Siguiente >></a>
+    {{/if}} 
+</div>
+{{else}}
+<h1>No hay estudiantes para mostrar</h1>
+{{/if}}
