@@ -16,32 +16,40 @@ export default class CartManager {
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
         }
     
     }
     async getCarts (){
         try{
-            const result = await cartModel.find();
+            const result = await cartModel.find().lean();
             console.log(result)
             return result;
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
         }
     }
 
-    async getCartById (idCart) {
+    async getCartById (idCart, len = false) {
         try{
-            const result = await cartModel
-            .findOne({ _id: idCart })
-            .populate("products.product");
-            return result;
+            if (len){
+                const result1 = await cartModel
+                .findOne({ _id: idCart }).lean()
+                .populate("products.product");
+                return result1;
+            }
+            else{
+                const result2 = await cartModel
+                .findOne({ _id: idCart })
+                .populate("products.product");
+                return result2;
+            }
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
         }
     }
     
@@ -51,6 +59,7 @@ export default class CartManager {
             const product = await this.productManager.getProductById(idProduct);
             cart.products.push({ product: product });
             await cart.save();
+            console.log("añadido al carrito")
             return;
         }
         catch (error) {
@@ -61,25 +70,27 @@ export default class CartManager {
     async deleteFromCart(idCart, idProduct) {
         try {
             const cart = await this.getCartById(idCart);
+            console.log(cart)
             cart.products.pull(idProduct);
             await cart.save();
-            return;
+            return true;
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
         }
     }
     async clearCart(idCart) {
         try{
             const cart = await this.getCartById(idCart);
+            console.log(cart)
             cart.products = [];
             await cart.save();
             return;
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
         }
     }
     async updateCart(idCart, products) {
@@ -93,7 +104,20 @@ export default class CartManager {
         }
         catch (error) {
             console.error(error);
-            return error;
+            return null;
+        }
+    }
+    async updateProductQuantity(idCart, idProduct, products) {
+        try {
+            const cart = await this.getCartById(idCart);
+            console.log(cart.products.id())
+            //const findProduct = result.products.find(product => product.id == idProduct);
+            //console.log(findProduct)
+            return;
+        }
+        catch (error) {
+            console.error(error);
+            return null;
         }
     }
 }

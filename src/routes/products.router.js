@@ -7,8 +7,33 @@ const router = Router();
 
 const productManager = new ProductManager();
 
+router.get('/',async (req, res) => {
+    let limit = Number(req.query.limit);
+    let page = Number(req.query.page);
+    let sort = Number(req.query.sort);
+    if (isNaN(limit)) {
+        limit = 10;
+    }
+    if (isNaN(page)) {
+        page = 1;
+    }
+    if (isNaN(sort)) {
+        sort = 0;
+    }
+    let filter = req.query.filter;
+    let filterVal = req.query.filterVal;
+    
+    let products = await productManager.getProducts(limit, page, sort, filter, filterVal);
+    products.prevLink = products.hasPrevPage?`http://localhost:8080/products/?page=${products.prevPage}&limit=${limit}&sort=${sort}&filter=${filter}&filterVal=${filterVal}`:'';
+    products.nextLink = products.hasNextPage?`http://localhost:8080/products/?page=${products.nextPage}&limit=${limit}&sort=${sort}&filter=${filter}&filterVal=${filterVal}`:'';
+    //console.log(products)
+    if (page<=0 || page>products.totalPages){
+        res.status(404).send({ status: "error", message: "Page not found" });
+    }
+    res.render('allproducts', {products})
+})
 
-router.get("/", async (req, res) => {
+router.get("/productos", async (req, res) => {
     let limit = Number(req.query.limit);
     let page = Number(req.query.page);
     let sort = Number(req.query.sort);
@@ -25,17 +50,18 @@ router.get("/", async (req, res) => {
     let filterVal = req.query.filterVal;
     console.log(limit, page, sort)
     let productos = await productManager.getProducts(limit, page, sort, filter, filterVal);
-
     productos.prevLink = productos.hasPrevPage?`http://localhost:8080/students?page=${productos.prevPage}`:'';
     productos.nextLink = productos.hasNextPage?`http://localhost:8080/students?page=${productos.nextPage}`:'';
     productos.isValid= !(page<=0||page>productos.totalPages)
-    res.render('producto',productos)
+    if (page<=0 || page>productos.totalPages){
+        res.status(404).send({ status: "error", message: "Page not found" });
+    }
     res.send({ productos }); 
 });
 
 router.get('/:pid', async (req, res) => {
     const producto = await productManager.getProductById(req.params.pid);
-    res.send(producto);
+    res.render('product',producto);
 });
 
 router.post("/", async (req, res) => {

@@ -24,16 +24,16 @@ export default class ProductManager {
 async getProducts(limit = 10, page = 1, sort = 0, filter = null, filterVal = null){
     try{
         let filterOptions = {};
-        if (filter != "" && filterVal != "") {
+        if (filter != "" && filterVal != "" && filter != "undefined" && filterVal != "undefined") {
             filterOptions = { [filter]: filterVal };
         }
         //Esto lo hice para que no me haga sort cuando no le paso nada
         if (sort == 1 || sort == -1) {
-            let result = await productsModel.paginate(filterOptions, {limit: limit, page: page, sort: { price: sort }});
+            let result = await productsModel.paginate(filterOptions, {limit: limit, page: page, sort: { price: sort },lean:true});
             return result;
         }
         else{
-            let result = await productsModel.paginate(filterOptions, {limit: limit, page: page});
+            let result = await productsModel.paginate(filterOptions, {limit: limit, page: page,lean:true});
             return result;
         }
     }

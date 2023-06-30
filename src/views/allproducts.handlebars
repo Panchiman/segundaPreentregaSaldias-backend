@@ -1,0 +1,22 @@
+<div>   
+    <h1>Productos:</h1>
+    {{#each products.docs}}
+    <div>
+        <h4><a href="http://localhost:8080/products/{{this.id}}">{{this.title}}</a> &nbsp; </h4>
+        <hr>
+    </div>
+    <br/>
+    {{/each}}
+</div>
+<br/>
+<div>
+    {{#if products.hasPrevPage}}
+        <a href={{products.prevLink}}><< Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{products.page}}
+    &nbsp;
+    {{#if products.hasNextPage}}
+        <a href={{products.nextLink}}>Siguiente >></a>
+    {{/if}} 
+</div>

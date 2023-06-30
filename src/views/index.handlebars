@@ -1,7 +1,7 @@
-{{#if isValid}}
-<div>
+
+<div>   
     <h1>Productos:</h1>
-    {{#each docs}}
+    {{#each products.docs}}
     <div>
         <h4>{{this.title}} &nbsp; </h4>
         <p>Descripcion: {{this.description}} &nbsp; </p>
@@ -9,6 +9,7 @@
         <p>Categoria: {{this.category}} &nbsp; </p>
         <img src="{{this.thumbnail}}" alt="{{this.description}}">
         <p>Stock: {{this.stock}} &nbsp; </p>
+        <button onclick="addToCartButton()">Añadir al carrito</button>
         <hr>
     </div>
     <br/>
@@ -16,16 +17,12 @@
 </div>
 <br/>
 <div>
-    {{#if hasPrevPage}}
-        <a href={{this.prevLink}}><< Anterior</a>
+    {{#if products.hasPrevPage}}
+        <a href={{products.prevLink}}><< Anterior</a>
     {{/if}}
     &nbsp;
-    {{this.page}}
     &nbsp;
-     {{#if hasNextPage}}
-        <a href={{this.nextLink}}>Siguiente >></a>
+    {{#if products.hasNextPage}}
+        <a href={{products.nextLink}}>Siguiente >></a>
     {{/if}} 
 </div>
-{{else}}
-<h1>No hay productos</h1>
-{{/if}}

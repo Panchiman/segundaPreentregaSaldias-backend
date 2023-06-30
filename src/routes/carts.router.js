@@ -6,8 +6,23 @@ const cartManager = new CartManager();
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const cart = await cartManager.getCartById(id);
-    res.send(cart);
+    const bole = true;
+    const cart = await cartManager.getCartById(id,bole);
+    if (!cart) {
+        res.status(404).send({ status: "error", message: "Cart not found" });
+        return;
+    }
+    const carrito = cart.products;
+    let carritofinal = [];
+    function listaCarrito (){
+        for (let index = 0; index < carrito.length; index++) {
+            carritofinal.push(carrito[index].product)
+        }
+    }
+    
+    listaCarrito();
+    console.log(carrito)
+    res.render('cart',{carritofinal});
 });
 
 router.get("/", (req, res) => {
@@ -30,8 +45,11 @@ router.post("/:cid/products/:pid", async (req, res) => {
 router.delete("/:cid/products/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
-
-    await cartManager.deleteFromCart(cartId, productId);
+    const cart = await cartManager.deleteFromCart(cartId, productId);
+    if (!cart) {
+        res.status(404).send({ status: "error", message: "Cart or product not found" });
+        return;
+    }
     res.send({ status: "success" });
 })
 router.delete("/:cid", async (req, res) => {
@@ -46,6 +64,13 @@ router.put("/:cid", async (req, res) => {
     const cartId = req.params.cid;
     await cartManager.updateCart(cartId, products);
     res.send({ status: "success" });
+})
+
+router.put("/:cid/products/:pid", async (req, res) => {
+    const products = req.body;
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    await cartManager.updateProductQuantity(cartId, productId, products);
 })
 
 export default router;

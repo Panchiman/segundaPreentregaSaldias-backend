@@ -25,18 +25,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/products', routerProducts)
 app.use('/carts/', routerCart)
 
-app.get('/',async (req, res) => {
-    let page = Number(req.query.page);
-    if (isNaN(page)) {
-        page = 1;
-    }
-    let products = await productsModel.paginate({},{page,limit:5,lean:true});
 
-    products.prevLink = products.hasPrevPage?`http://localhost:8080/?page=${products.prevPage}`:'';
-    products.nextLink = products.hasNextPage?`http://localhost:8080/?page=${products.nextPage}`:'';
-    products.isValid = true;
-    res.render('index', {products})
-})
 
 const expressServer = app.listen(8080, () => console.log("Listening"));
 const socketServer = new Server(expressServer);
